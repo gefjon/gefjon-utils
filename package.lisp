@@ -9,4 +9,5 @@
            :compiler-defun
            :coerce-to-string
            :symbol-concatenate
-           :make-keyword))
+           :make-keyword
+           :check-anaphoric-types))

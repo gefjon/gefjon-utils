@@ -8,7 +8,8 @@
   ((:file :package)
    (:module :src
             :depends-on (:package)
-            :components ((:file :compiler-state)
+    :components ((:file :check-anaphoric-types)
+                 (:file :compiler-state)
                          (:file :symbol-manipulations
                                 :depends-on (:compiler-state))
                          (:file :defstruct-defclass
