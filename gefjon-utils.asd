@@ -3,14 +3,16 @@
   :author :gefjon
   :depends-on (:alexandria
                :iterate
-               :trivial-types)
+               :trivial-types
+               :quicklisp)
   :components
   ((:file :package)
    (:module :src
             :depends-on (:package)
-    :components ((:file :check-anaphoric-types)
-                 (:file :compiler-state)
+            :components ((:file :check-anaphoric-types)
+                         (:file :compiler-state)
                          (:file :symbol-manipulations
                                 :depends-on (:compiler-state))
                          (:file :defstruct-defclass
-                                :depends-on (:compiler-state :symbol-manipulations))))))
+                                :depends-on (:compiler-state :symbol-manipulations))
+                         (:file :repl-utils)))))
