@@ -8,6 +8,7 @@
            :slot-descriptor-name
            :slot-descriptors-types
            :slot-descriptors-names
+           :constructor-name
            :defstruct
            :defclass
            :compiler-state
