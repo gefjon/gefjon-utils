@@ -15,4 +15,5 @@
                                 :depends-on (:compiler-state))
                          (:file :defstruct-defclass
                                 :depends-on (:compiler-state :symbol-manipulations))
-                         (:file :repl-utils)))))
+                         (:file :repl-utils)
+                         (:file :places)))))

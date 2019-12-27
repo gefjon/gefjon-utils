@@ -17,4 +17,5 @@
            :symbol-concatenate
            :make-keyword
            :check-anaphoric-types
-           :load-and-enter))
+           :load-and-enter
+           :mapf))
