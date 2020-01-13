@@ -10,7 +10,9 @@
            :slot-descriptors-names
            :constructor-name
            :defstruct
-           :defclass
+   :defclass
+           :define-boa-constructor-for-class
+           :print-all-slots-mixin
            :compiler-state
            :compiler-defun
            :coerce-to-string
@@ -18,4 +20,5 @@
            :make-keyword
            :check-anaphoric-types
            :load-and-enter
-           :mapf))
+           :mapf
+           :shallow-copy))

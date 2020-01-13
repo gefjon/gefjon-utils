@@ -4,7 +4,8 @@
   :depends-on (:alexandria
                :iterate
                :trivial-types
-               :quicklisp)
+               :quicklisp
+               :closer-mop)
   :components
   ((:file :package)
    (:module :src
@@ -15,5 +16,7 @@
                                 :depends-on (:compiler-state))
                          (:file :defstruct-defclass
                                 :depends-on (:compiler-state :symbol-manipulations))
+                         (:file :clos
+                                :depends-on (:symbol-manipulations))
                          (:file :repl-utils)
                          (:file :places)))))
