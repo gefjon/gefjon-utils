@@ -17,16 +17,18 @@
 (defmethod print-object ((object print-all-slots-mixin) stream)
   "print all the slots of OBJECT in the same format as for a `STRUCTURE-OBJECT'"
   (pprint-logical-block (stream nil)
-    (write-string "#<" stream)
-    (write-string (symbol-name (class-name (class-of object))) stream)
-    (pprint-logical-block (stream nil)
-      (iter
-        (for slot-name slot-name-of object)
-        (unless (first-time-p)
-          (pprint-newline :linear stream))
-        (write-char #\space stream)
-        (format stream ":~a ~s" slot-name (slot-value object slot-name))))
-    (write-char #\> stream)))
+    (print-unreadable-object (object stream :type nil :identity nil)
+      ;; i manually print the name of the class rather than passing
+      ;; `:type t' to `PRINT-UNREADABLE-OBJECT' because i don't like
+      ;; the extra clutter of the package designator
+      (write-string (symbol-name (class-name (class-of object))) stream)
+      (pprint-logical-block (stream nil)
+        (iter
+          (for slot-name slot-name-of object)
+          (unless (first-time-p)
+            (pprint-newline :linear stream))
+          (write-char #\space stream)
+          (format stream ":~a ~s" slot-name (slot-value object slot-name)))))))
 
 
 (defgeneric shallow-copy (object &rest initargs &key &allow-other-keys)
