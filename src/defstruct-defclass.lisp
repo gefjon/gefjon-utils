@@ -16,9 +16,14 @@
     (type (err-uninit))))
 
 (compiler-defun slot-descriptor-init-unbound-p (slot-descriptor)
-  (destructuring-bind (name type &key init-unbound) slot-descriptor
+  (destructuring-bind (name type &key init-unbound &allow-other-keys) slot-descriptor
     (declare (ignore name type))
     (when init-unbound t)))
+
+(compiler-defun slot-descriptor-initform (slot-descriptor)
+  (destructuring-bind (name type &key (initform nil supplied-p) &allow-other-keys) slot-descriptor
+    (declare (ignore name type))
+    (values initform supplied-p)))
 
 (compiler-defun slot-descriptors-types (slot-descriptors)
   (mapcar #'slot-descriptor-type slot-descriptors))
@@ -38,10 +43,11 @@
 
 (compiler-defun class-slot (class-name slot-descriptor)
   "build a slot-specifier suitable for `CL:DEFCLASS'"
-  (destructuring-bind (slot-name slot-type &key init-unbound) slot-descriptor
+  (destructuring-bind (slot-name slot-type &key init-unbound (initform '(err-uninit)))
+      slot-descriptor
     `(,slot-name
       ,@(unless init-unbound
-          `(:initform (err-uninit)
+          `(:initform ,initform
             :initarg ,(make-keyword slot-name)))
        :type ,slot-type
        :accessor ,(accessor-name class-name slot-name))))
