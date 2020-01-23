@@ -1,15 +1,24 @@
 (in-package :gefjon-utils)
 
-(defmacro-clause (for |var| slot-name-of |instance| &optional with-class |class-name|)
+(defmacro-clause (for |var| slot-name-of |instance| &optional bound-only |bound-only-p| with-class |class-name|)
   "symbols which name slots of a clos instance"
   (let ((class (or |class-name| (gensym "CLASS")))
         (all-slots (gensym "ALL-SLOTS"))
-        (slot-names (gensym "SLOT-NAMES")))
+        (slot-names (gensym "SLOT-NAMES"))
+        (bound-slot-names (gensym "BOUND-SLOTS"))
+        (slot-name (gensym "SLOT-NAME"))
+        (instance (gensym "instance")))
     `(progn
-       (with ,class = (class-of ,|instance|))
+       (with ,instance = ,|instance|)
+       (with ,class = (class-of ,instance))
        (with ,all-slots = (closer-mop:class-slots ,class))
        (with ,slot-names = (mapcar #'closer-mop:slot-definition-name ,all-slots))
-       (for ,|var| in ,slot-names))))
+       (with ,bound-slot-names = ,(if |bound-only-p|
+                                      `(flet ((slot-unbound-p (,slot-name)
+                                                (not (slot-boundp ,instance ,slot-name))))
+                                         (remove-if #'slot-unbound-p ,slot-names))
+                                      slot-names))
+       (for ,|var| in ,bound-slot-names))))
 
 (defclass print-all-slots-mixin ()
   :documentation "a mixin with a `PRINT-OBJECT' method that prints all its slots")
@@ -24,9 +33,10 @@
       (write-string (symbol-name (class-name (class-of object))) stream)
       (pprint-logical-block (stream nil)
         (iter
-          (for slot-name slot-name-of object)
-          (unless (first-time-p)
+          (for slot-name slot-name-of object bound-only t)
+          (if (first-time-p)
             (pprint-newline :linear stream))
+          (when (slot-boundp object slot-name))
           (write-char #\space stream)
           (format stream ":~a ~s" slot-name (slot-value object slot-name)))))))
 
@@ -46,10 +56,9 @@ REINITIALIZE-INSTANCE is called to update the copy with INITARGS.
 
 from https://stackoverflow.com/questions/11067899/is-there-a-generic-method-for-cloning-clos-objects"
   (iter
-    (for slot-name slot-name-of object with-class class)
-    (with copy = (allocate-instance class))
-    (when (slot-boundp object slot-name)
-      (setf (slot-value copy slot-name)
-            (slot-value object slot-name)))
+    (with copy = (allocate-instance (class-of object)))
+    (for slot-name slot-name-of object bound-only t)
+    (setf (slot-value copy slot-name)
+          (slot-value object slot-name))
     (finally
      (return (apply #'reinitialize-instance copy initargs)))))
