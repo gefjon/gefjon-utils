@@ -34,9 +34,8 @@
       (pprint-logical-block (stream nil)
         (iter
           (for slot-name slot-name-of object bound-only t)
-          (if (first-time-p)
+          (unless (first-time-p)
             (pprint-newline :linear stream))
-          (when (slot-boundp object slot-name))
           (write-char #\space stream)
           (format stream ":~a ~s" slot-name (slot-value object slot-name)))))))
 
