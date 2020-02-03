@@ -46,7 +46,8 @@
   (destructuring-bind (slot-name slot-type &key may-init-unbound
                                              (initform '(err-uninit) initform-supplied-p)
                                              (initarg (make-keyword slot-name))
-                                             (accessor (accessor-name class-name slot-name)))
+                                             (accessor (accessor-name class-name slot-name))
+                                             read-only)
       slot-descriptor
     (when (and may-init-unbound initform-supplied-p)
       (error "initform is incompatible with uninit in class slot"))
@@ -57,7 +58,7 @@
       ,@(when initarg
           `(:initarg ,initarg))
       ,@(when accessor
-          `(:accessor ,accessor)))))
+          `(,(if read-only :reader :accessor) ,accessor)))))
 
 (compiler-defun class-slots (class-name slot-descriptors)
   (iter (for slot in slot-descriptors)

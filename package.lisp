@@ -23,4 +23,8 @@
    :check-anaphoric-types
    :load-and-enter
    :mapf
-   :hash-map))
+   :hash-map
+   :->
+   :|:|
+   :skip-nil
+   :slot-name-of))

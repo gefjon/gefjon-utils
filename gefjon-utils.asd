@@ -1,5 +1,5 @@
 (defsystem :gefjon-utils
-  :version :0.0.0
+  :version "0.0.1"
   :author :gefjon
   :depends-on (:alexandria
                :iterate
@@ -18,6 +18,9 @@
                  (:file :defstruct-defclass
                   :depends-on (:compiler-state :symbol-manipulations))
                  (:file :clos
-                  :depends-on (:symbol-manipulations))
+                  :depends-on (:symbol-manipulations
+                               :iterate))
                  (:file :repl-utils)
-                 (:file :places)))))
+                 (:file :places)
+                 (:file :type-declaration)
+                 (:file :iterate)))))
