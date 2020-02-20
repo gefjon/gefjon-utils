@@ -24,6 +24,7 @@
    :load-and-enter
    :mapf
    :hash-map
+   :optional
    :->
    :|:|
    :skip-nil
