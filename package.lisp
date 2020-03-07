@@ -28,4 +28,5 @@
    :->
    :|:|
    :skip-nil
-   :slot-name-of))
+   :slot-name-of
+   :adjustable-vector))

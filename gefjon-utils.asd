@@ -23,4 +23,6 @@
                  (:file :repl-utils)
                  (:file :places)
                  (:file :type-declaration)
-                 (:file :iterate)))))
+                 (:file :iterate)
+                 (:file :adjustable-vector
+                  :depends-on (:compiler-state))))))
