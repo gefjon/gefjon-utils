@@ -29,4 +29,5 @@
    :|:|
    :skip-nil
    :slot-name-of
-   :adjustable-vector))
+   :adjustable-vector
+   :make-adjustable-vector))
