@@ -1,4 +1,11 @@
-(in-package :gefjon-utils)
+(uiop:define-package :gefjon-utils/clos
+    (:mix
+     :gefjon-utils/defstruct-defclass
+     :gefjon-utils/iterate
+     :iterate
+     :cl)
+  (:export :print-all-slots-mixin :shallow-copy))
+(cl:in-package :gefjon-utils/clos)
 
 (defclass print-all-slots-mixin ()
   :documentation "a mixin with a `PRINT-OBJECT' method that prints all its slots")

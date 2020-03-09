@@ -1,6 +1,9 @@
-(in-package :gefjon-utils)
+(uiop:define-package :gefjon-utils/type-declaration
+    (:mix :gefjon-utils/compiler-state :cl)
+  (:export :-> :|:|))
+(cl:in-package :gefjon-utils/type-declaration)
 
-(defun values-form-p (form)
+(compiler-defun values-form-p (form)
   (and (consp form)
        (eq (first form) 'values)
        form))
@@ -10,7 +13,7 @@
                          `(values ,return-type &optional))))
     `(function ,inputs ,values-type)))
 
-(defun function-form-p (form)
+(compiler-defun function-form-p (form)
   (and (consp form)
        (eq (first form) 'function)
        form))

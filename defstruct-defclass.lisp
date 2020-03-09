@@ -1,4 +1,12 @@
-(in-package :gefjon-utils)
+(uiop:define-package :gefjon-utils/defstruct-defclass
+    (:mix
+     :gefjon-utils/symbol-manipulations
+     :gefjon-utils/compiler-state
+     :iterate
+     :cl)
+  (:shadow :defclass :defstruct)
+  (:export :defclass :defstruct))
+(cl:in-package :gefjon-utils/defstruct-defclass)
 
 (compiler-defun accessor-name (class-name slot-name)
   (symbol-concatenate class-name '- slot-name))

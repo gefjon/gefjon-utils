@@ -1,4 +1,7 @@
-(in-package :gefjon-utils)
+(uiop:define-package :gefjon-utils/check-anaphoric-types
+    (:mix :cl)
+  (:export :check-anaphoric-types))
+(cl:in-package :gefjon-utils/check-anaphoric-types)
 
 (defmacro check-anaphoric-types (&rest places-and-types)
   "PLACES-AND-TYPES must each be a symbol which names both a place and a type"
