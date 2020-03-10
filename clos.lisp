@@ -1,6 +1,6 @@
 (uiop:define-package :gefjon-utils/clos
     (:mix
-     :gefjon-utils/defstruct-defclass
+     :gefjon-utils/defclass
      :gefjon-utils/iterate
      :iterate
      :cl)

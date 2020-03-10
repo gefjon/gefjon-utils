@@ -1,19 +1,19 @@
 (uiop:define-package :gefjon-utils/symbol-manipulations
-    (:mix :gefjon-utils/compiler-state :cl)
+    (:mix :cl)
   (:export :coerce-to-string :symbol-concatenate :make-keyword))
 (cl:in-package :gefjon-utils/symbol-manipulations)
 
-(compiler-defun coerce-to-string (object)
+(defun coerce-to-string (object)
   (typecase object
     (symbol (symbol-name object))
     (string object)
     (t (coerce object 'string))))
 
-(compiler-defun symbol-concatenate (&rest symbols-or-strings)
+(defun symbol-concatenate (&rest symbols-or-strings)
   (intern (apply #'concatenate
                  (cons 'string (mapcar #'coerce-to-string
                                        symbols-or-strings)))))
 
-(compiler-defun make-keyword (symbol-or-string)
+(defun make-keyword (symbol-or-string)
   (intern (coerce-to-string symbol-or-string)
           (find-package :keyword)))

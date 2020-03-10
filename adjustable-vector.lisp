@@ -1,12 +1,10 @@
 (uiop:define-package :gefjon-utils/adjustable-vector
-    (:mix
-     :gefjon-utils/compiler-state
-     :cl)
+    (:mix :cl)
   (:import-from :alexandria :with-gensyms)
   (:export :adjustable-vector :make-adjustable-vector))
 (cl:in-package :gefjon-utils/adjustable-vector)
 
-(compiler-defun vector-adjustable-p (vector)
+(defun vector-adjustable-p (vector)
   (and (vectorp vector)
        (adjustable-array-p vector)
        (array-has-fill-pointer-p vector)))
