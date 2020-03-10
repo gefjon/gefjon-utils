@@ -1,11 +1,13 @@
 (uiop:define-package :gefjon-utils/defclass
-    (:mix
-     :gefjon-utils/symbol-manipulations
-     :gefjon-utils/type-definitions
-     :iterate
-     :cl)
+    (:mix :cl)
   (:import-from :alexandria
    :mappend :symbolicate :curry)
+  (:import-from :gefjon-utils/clos
+   :print-all-slots-mixin)
+  (:import-from :gefjon-utils/symbol-manipulations
+   :make-keyword :symbol-concatenate)
+  (:import-from :gefjon-utils/type-definitions
+   :optional)
   (:shadow :defclass)
   (:export :defclass))
 (cl:in-package :gefjon-utils/defclass)
@@ -32,9 +34,11 @@
                                    (accessor (accessor-name class-name name))
                                    read-only)
       list
-      (when (and may-init-unbound initform-supplied-p)
-        (error "initform and may-init-unbound are mutually exclusive"))
-      (make-slot-descriptor :name name
+    (when (and may-init-unbound initform-supplied-p)
+      (error "initform and may-init-unbound are mutually exclusive"))
+    (when (and read-only (not accessor))
+      (error ":READ-ONLY T is incompatible with :ACCESSOR NIL"))
+    (make-slot-descriptor :name name
                             :type type
                             :may-init-unbound may-init-unbound
                             :initform initform
@@ -71,13 +75,15 @@
                                                   superclasses)
   "an altpernate syntax for `CL:DEFCLASS'.
 
+arranges for a `PRINT-OBJECT' method which prints all the present
+slots of the instance, including inherited slots.
+
 each SLOT-DESCRIPTOR should be a list of the form
- (SLOT-NAME SLOT-TYPE &key MAY-INIT-UNBOUND INITFORM INITARG ACCESSOR)
+ (SLOT-NAME SLOT-TYPE &key MAY-INIT-UNBOUND INITFORM INITARG ACCESSOR
+READ-ONLY). the new class will have a slot named SLOT-NAME with a
+declared type of SLOT-TYPE.
 
-the new class will have a slot named SLOT-NAME with a declared type of
-SLOT-TYPE.
-
-if MAY-INIT-UNBOUND is supplied and non-nil, the slot will be
+if MAY-INIT-UNBOUND is `T', the slot will be
 uninitialized until/unless set either by passing INITARG to
 `MAKE-INSTANCE' or using (`SETF' ACCESSOR).
 
@@ -85,14 +91,19 @@ if INITFORM is supplied, its value will be the slot's default
 initform, unless overridden by passing INITARG to
 `MAKE-INSTANCE'. INITFORM and MAY-INIT-UNBOUUND are incompatible.
 
-INITARG should be a keyword. it defaults to the name of the slot
+INITARG should be a keyword or `NIL'. it defaults to the name of the slot
 converted to a keyword. if INITARG is supplied and NIL, there will be
-way to initialize the slot while calling `MAKE-INSTANCE'.
+no way to initialize the slot while calling `MAKE-INSTANCE'.
 
 ACCESSOR should be a symbol. it defaults to a symbol that looks like
 CLASS-NAME-SLOT-NAME interned in `*PACKAGE*'. if supplied and NIL, no
-accessor will be defined."
-  (let ((slot-descriptors (mapcar (curry #'parse-slot-descriptor class-name) slot-descriptors)))
+accessor will be defined.
+
+if READ-ONLY is `T', a reader will be defined instead of an
+accessor. the slot will still be writable with (`SETF'
+`SLOT-VALUE'). READ-ONLY is incompatible with `:ACCESSOR' `NIL'"
+  (let ((slot-descriptors (mapcar (curry #'parse-slot-descriptor class-name) slot-descriptors))
+        (superclasses (append superclasses '(print-all-slots-mixin))))
     `(progn
        (cl:defclass ,class-name ,superclasses
          ,(mapcar #'output-slot-descriptor slot-descriptors)

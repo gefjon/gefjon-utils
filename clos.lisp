@@ -1,14 +1,17 @@
 (uiop:define-package :gefjon-utils/clos
     (:mix
-     :gefjon-utils/defclass
      :gefjon-utils/iterate
      :iterate
      :cl)
   (:export :print-all-slots-mixin :shallow-copy))
 (cl:in-package :gefjon-utils/clos)
 
-(defclass print-all-slots-mixin ()
-  :documentation "a mixin with a `PRINT-OBJECT' method that prints all its slots")
+;; this has to be a `CL:DEFCLASS' form rather than a
+;; `GEFJON-UTLS:DEFCLASS' because that macro inserts this as a mixin
+;; to all its class definitions; using the raw `DEFCLASS' avoids a
+;; circular dependency
+(defclass print-all-slots-mixin () ()
+  (:documentation "a mixin with a `PRINT-OBJECT' method that prints all its slots"))
 
 (defmethod print-object ((object print-all-slots-mixin) stream)
   "print all the slots of OBJECT in the same format as for a `STRUCTURE-OBJECT'"
