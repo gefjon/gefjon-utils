@@ -4,6 +4,8 @@
      :gefjon-utils/compiler-state
      :iterate
      :cl)
+  (:import-from :alexandria
+   :mappend :symbolicate)
   (:shadow :defclass :defstruct)
   (:export :defclass :defstruct))
 (cl:in-package :gefjon-utils/defstruct-defclass)
@@ -11,8 +13,8 @@
 (compiler-defun accessor-name (class-name slot-name)
   (symbol-concatenate class-name '- slot-name))
 
-(defmacro err-uninit ()
-  '(error "required field uninit"))
+(defmacro err-uninit (slot-name)
+  `(error "required field uninit: ~s" ',slot-name))
 
 (compiler-defun accessor-type-declamation (class-name slot-descriptor)
   `(ftype (function (,class-name) ,(slot-descriptor-type slot-descriptor))
@@ -20,8 +22,8 @@
 
 (compiler-state
   (cl:defstruct (slot-descriptor (:type list))
-    (name (err-uninit) :type symbol)
-    (type (err-uninit))))
+    (name (err-uninit name) :type symbol)
+    (type (err-uninit type))))
 
 (compiler-defun slot-descriptor-init-unbound-p (slot-descriptor)
   (destructuring-bind (name type &key init-unbound &allow-other-keys) slot-descriptor
@@ -41,9 +43,10 @@
 
 (compiler-defun struct-slot (slot-descriptor)
   "build a slot-specifier suitable for `CL:DEFSTRUCT'"
-  `(,(slot-descriptor-name slot-descriptor)
-     (err-uninit)
-     :type ,(slot-descriptor-type slot-descriptor)))
+  (let ((name (slot-descriptor-name slot-descriptor)))
+    `(,name
+      (err-uninit ,name)
+      :type ,(slot-descriptor-type slot-descriptor))))
 
 (compiler-defun struct-slots (slot-descriptors)
   (iter (for slot in slot-descriptors)
@@ -52,7 +55,7 @@
 (compiler-defun class-slot (class-name slot-descriptor)
   "build a slot-specifier suitable for `CL:DEFCLASS'"
   (destructuring-bind (slot-name slot-type &key may-init-unbound
-                                             (initform '(err-uninit) initform-supplied-p)
+                                             (initform `(err-uninit ,slot-name) initform-supplied-p)
                                              (initarg (make-keyword slot-name))
                                              (accessor (accessor-name class-name slot-name))
                                              read-only)
@@ -76,7 +79,7 @@
   `(,(make-keyword slot-name) ,slot-name))
 
 (compiler-defun slot-initializers (slot-names)
-  (alexandria:mappend #'slot-initializer-arg
+  (mappend #'slot-initializer-arg
                       slot-names))
 
 (compiler-defun constructor-name (class-name)
@@ -96,7 +99,7 @@ constructor like `MAKE-INSTANCE'."
 
 (defmacro slot-boundp-forms (class-name slot-descriptors)
   (labels ((boundp-name (slot-name)
-             (alexandria:symbolicate class-name '- slot-name '-boundp))
+             (symbolicate class-name '- slot-name '-boundp))
            (defboundp (slot-name)
              `(progn
                 (declaim (ftype (function (,class-name) boolean)
