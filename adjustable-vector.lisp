@@ -1,7 +1,7 @@
 (uiop:define-package :gefjon-utils/adjustable-vector
     (:mix :cl)
   (:import-from :alexandria :with-gensyms)
-  (:export :adjustable-vector :make-adjustable-vector))
+  (:export :adjustable-vector :make-adjustable-vector :specialized-vector))
 (cl:in-package :gefjon-utils/adjustable-vector)
 
 (defun vector-adjustable-p (vector)
@@ -21,3 +21,9 @@
                    :initial-contents ,contents
                    :fill-pointer ,length
                    :adjustable t))))
+
+(defmacro specialized-vector (type &rest contents)
+  `(let ((contents ,contents))
+     (make-array (length contents)
+                 :element-type ',type
+                 :initial-contents contents)))
