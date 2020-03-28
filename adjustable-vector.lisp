@@ -12,6 +12,10 @@
 (deftype adjustable-vector (&optional element-type)
   `(and (vector ,element-type) (satisfies vector-adjustable-p)))
 
+(defmacro adjustable-vector (type &rest initial-contents)
+  `(make-adjustable-vector :element-type ,type
+                           :initial-contents ,initial-contents))
+
 (defmacro make-adjustable-vector (&key (element-type t) initial-contents)
   (with-gensyms (length contents)
     `(let* ((,contents ,initial-contents)
@@ -23,7 +27,7 @@
                    :adjustable t))))
 
 (defmacro specialized-vector (type &rest contents)
-  `(let ((contents ,contents))
+  `(let ((contents (list ,@contents)))
      (make-array (length contents)
                  :element-type ',type
                  :initial-contents contents)))
