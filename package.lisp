@@ -5,7 +5,7 @@
    :gefjon-utils/check-anaphoric-types
    :gefjon-utils/compiler-state
    :gefjon-utils/symbol-manipulations
-   :gefjon-utils/defclass
+   :gefjon-utils/define-class
    :gefjon-utils/clos
    :gefjon-utils/repl
    :gefjon-utils/places

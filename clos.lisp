@@ -7,7 +7,7 @@
 (cl:in-package :gefjon-utils/clos)
 
 ;; this has to be a `CL:DEFCLASS' form rather than a
-;; `GEFJON-UTLS:DEFCLASS' because that macro inserts this as a mixin
+;; `GEFJON-UTLS:DEFINE-CLASS' because that macro inserts this as a mixin
 ;; to all its class definitions; using the raw `DEFCLASS' avoids a
 ;; circular dependency
 (defclass print-all-slots-mixin () ()
