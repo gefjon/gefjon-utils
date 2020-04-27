@@ -1,6 +1,6 @@
 (uiop:define-package :gefjon-utils/type-declaration
     (:mix :cl)
-  (:export :-> :|:|))
+  (:export :-> :|:| :void))
 (cl:in-package :gefjon-utils/type-declaration)
 
 (defun values-form-p (form)
@@ -8,8 +8,13 @@
        (eq (first form) 'values)
        form))
 
+(defun void-p (form)
+  (when (eq form 'void)
+    '(values &optional)))
+
 (deftype -> (inputs return-type)
   (let ((values-type (or (values-form-p return-type)
+                         (void-p return-type)
                          `(values ,return-type &optional))))
     `(function ,inputs ,values-type)))
 
