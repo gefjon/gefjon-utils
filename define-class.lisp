@@ -1,7 +1,7 @@
 (uiop:define-package :gefjon-utils/define-class
     (:mix :cl)
   (:import-from :alexandria
-   :mappend :symbolicate :curry)
+   :mappend :symbolicate)
   (:import-from :gefjon-utils/clos
    :print-all-slots-mixin)
   (:import-from :gefjon-utils/symbol-manipulations
@@ -10,9 +10,6 @@
    :optional)
   (:export :define-class))
 (cl:in-package :gefjon-utils/define-class)
-
-(defun accessor-name (class-name slot-name)
-  (symbol-concatenate class-name '- slot-name))
 
 (defmacro err-uninit (slot-name)
   `(error "required field uninit: ~s" ',slot-name))
@@ -26,11 +23,11 @@
   (accessor (err-uninit accessor) :type symbol)
   (read-only nil :type boolean))
 
-(defun parse-slot-descriptor (class-name list)
+(defun parse-slot-descriptor (list)
   (destructuring-bind (name type &key may-init-unbound
                                    (initform `(err-uninit ,name) initform-supplied-p)
                                    (initarg (make-keyword name))
-                                   (accessor (accessor-name class-name name))
+                                   (accessor name)
                                    read-only)
       list
     (when (and may-init-unbound initform-supplied-p)
@@ -101,7 +98,7 @@ accessor will be defined.
 if READ-ONLY is `T', a reader will be defined instead of an
 accessor. the slot will still be writable with (`SETF'
 `SLOT-VALUE'). READ-ONLY is incompatible with `:ACCESSOR' `NIL'"
-  (let ((slot-descriptors (mapcar (curry #'parse-slot-descriptor class-name) slot-descriptors))
+  (let ((slot-descriptors (mapcar  #'parse-slot-descriptor slot-descriptors))
         (superclasses (append superclasses '(print-all-slots-mixin))))
     `(progn
        (defclass ,class-name ,superclasses
