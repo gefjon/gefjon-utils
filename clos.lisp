@@ -3,7 +3,7 @@
      :gefjon-utils/iterate
      :iterate
      :cl)
-  (:export :print-all-slots-mixin :shallow-copy))
+  (:export :print-all-slots-mixin :shallow-copy :map-slots))
 (cl:in-package :gefjon-utils/clos)
 
 ;; this has to be a `CL:DEFCLASS' form rather than a
@@ -51,3 +51,15 @@ from https://stackoverflow.com/questions/11067899/is-there-a-generic-method-for-
           (slot-value object slot-name))
     (finally
      (return (apply #'reinitialize-instance copy initargs)))))
+
+(defun map-slots (func object &rest other-objects)
+  "Construct a new instance of the same class as OBJECT whose slots are filled with the result of applying FUNC to the values of those slots in OBJECT and OTHER-OBJECTS."
+  (iter
+    (for slot-name slot-name-of object
+         bound-only t
+         with-class class)
+    (with new = (allocate-instance class))
+    (flet ((slot-val (instance) (slot-value instance slot-name)))
+      (setf (slot-value new slot-name)
+            (apply func (slot-val object) (mapcar #'slot-val other-objects))))
+    (finally (return new))))
