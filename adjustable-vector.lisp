@@ -14,7 +14,7 @@
 
 (defmacro adjustable-vector (type &rest initial-contents)
   `(make-adjustable-vector :element-type ,type
-                           :initial-contents ,initial-contents))
+                           :initial-contents (list ,@initial-contents)))
 
 (defmacro make-adjustable-vector (&key (element-type t) initial-contents)
   (with-gensyms (length contents)
