@@ -3,7 +3,7 @@
      :gefjon-utils/iterate
      :iterate
      :cl)
-  (:export :print-all-slots-mixin :shallow-copy :map-slots))
+  (:export :print-all-slots-mixin :shallow-copy :map-slots :reduce-slots))
 (cl:in-package :gefjon-utils/clos)
 
 ;; this has to be a `CL:DEFCLASS' form rather than a
@@ -63,3 +63,13 @@ from https://stackoverflow.com/questions/11067899/is-there-a-generic-method-for-
       (setf (slot-value new slot-name)
             (apply func (slot-val object) (mapcar #'slot-val other-objects))))
     (finally (return new))))
+
+(defun reduce-slots (func object initial-value)
+  "Perform the functional reduce operation over the bound slots of object by repeatedly applying FUNC to two values: the reduction so far and the slot-value. The order of the slots is undefined."
+  (iter
+    (with reduction = initial-value)
+    (for slot-name slot-name-of object
+         bound-only t)
+    (for slot-val = (slot-value object slot-name))
+    (setf reduction (funcall func reduction slot-val))
+    (finally (return reduction))))
