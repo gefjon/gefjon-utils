@@ -64,12 +64,16 @@ from https://stackoverflow.com/questions/11067899/is-there-a-generic-method-for-
             (apply func (slot-val object) (mapcar #'slot-val other-objects))))
     (finally (return new))))
 
-(defun reduce-slots (func object initial-value)
-  "Perform the functional reduce operation over the bound slots of object by repeatedly applying FUNC to two values: the reduction so far and the slot-value. The order of the slots is undefined."
+(defun reduce-slots (func initial-value object &rest other-objects)
+  "Perform the functional reduce operation over the bound slots of
+OBJECT by repeatedly applying FUNC to at least two values: the
+reduction so far, followed by the slot-values of each of OBJECT and
+the OTHER-OBJECTS. The order of the slots is undefined."
   (iter
     (with reduction = initial-value)
     (for slot-name slot-name-of object
          bound-only t)
-    (for slot-val = (slot-value object slot-name))
-    (setf reduction (funcall func reduction slot-val))
+    (flet ((slot-val (obj) (slot-value obj slot-name)))
+      (setf reduction (apply func reduction
+                             (slot-val object) (mapcar #'slot-val other-objects))))
     (finally (return reduction))))
