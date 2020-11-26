@@ -1,21 +1,21 @@
-(uiop:define-package :gefjon-utils/define-class
-    (:mix :cl)
-  (:import-from :alexandria
-   :mappend :symbolicate)
-  (:import-from :gefjon-utils/clos
-   :print-all-slots-mixin)
-  (:import-from :gefjon-utils/symbol-manipulations
-   :make-keyword :symbol-concatenate)
-  (:import-from :gefjon-utils/type-definitions
-   :optional)
-  (:export :define-class))
-(cl:in-package :gefjon-utils/define-class)
+(uiop:define-package gefjon-utils/define-class
+  (:mix cl)
+  (:import-from alexandria
+                symbolicate)
+  (:import-from gefjon-utils/clos
+                print-all-slots-mixin)
+  (:import-from gefjon-utils/symbol-manipulations
+                make-keyword)
+  (:import-from gefjon-utils/type-definitions
+                optional)
+  (:export define-class))
+(in-package gefjon-utils/define-class)
 
 (defmacro err-uninit (slot-name)
   `(error "required field uninit: ~s" ',slot-name))
 
 (defstruct slot-descriptor
-  (name (err-uninit name) :type symbol)
+  (private-name (err-uninit name) :type symbol)
   (type (err-uninit type))
   (may-init-unbound nil :type boolean)
   (initform (err-uninit initform))
@@ -24,28 +24,29 @@
   (read-only nil :type boolean))
 
 (defun parse-slot-descriptor (list)
-  (destructuring-bind (name type &key may-init-unbound
-                                   (initform `(err-uninit ,name) initform-supplied-p)
-                                   (initarg (make-keyword name))
-                                   (accessor name)
-                                   read-only)
+  (destructuring-bind (public-name type &key may-init-unbound
+                                          (private-name (symbolicate "%" public-name))
+                                          (initform `(err-uninit ,public-name) initform-supplied-p)
+                                          (initarg (make-keyword public-name))
+                                          (accessor public-name)
+                                          read-only)
       list
     (when (and may-init-unbound initform-supplied-p)
       (error "initform and may-init-unbound are mutually exclusive"))
     (when (and read-only (not accessor))
       (error ":READ-ONLY T is incompatible with :ACCESSOR NIL"))
-    (make-slot-descriptor :name name
-                            :type type
-                            :may-init-unbound may-init-unbound
-                            :initform initform
-                            :initarg initarg
-                            :accessor accessor
-                            :read-only read-only)))
+    (make-slot-descriptor :private-name private-name
+                          :type type
+                          :may-init-unbound may-init-unbound
+                          :initform initform
+                          :initarg initarg
+                          :accessor accessor
+                          :read-only read-only)))
 
 (defun output-slot-descriptor (slot-descriptor)
   "build a slot-specifier suitable for `CL:DEFCLASS'"
-  (with-slots (name type may-init-unbound initform initarg accessor read-only) slot-descriptor
-    `(,name
+  (with-slots (private-name type may-init-unbound initform initarg accessor read-only) slot-descriptor
+    `(,private-name
       :type ,type
       ,@(unless may-init-unbound
           `(:initform ,initform))

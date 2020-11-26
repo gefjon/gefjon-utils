@@ -1,7 +1,7 @@
-(uiop:define-package :gefjon-utils/places
-    (:mix :cl)
-  (:export :mapf))
-(cl:in-package :gefjon-utils/places)
+(uiop:define-package gefjon-utils/places
+  (:mix cl)
+  (:export mapf))
+(in-package gefjon-utils/places)
 
 (defmacro mapf (place function)
   "invoke FUNCTION on PLACE and set PLACE to the result.

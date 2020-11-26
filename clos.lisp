@@ -1,10 +1,7 @@
-(uiop:define-package :gefjon-utils/clos
-    (:mix
-     :gefjon-utils/iterate
-     :iterate
-     :cl)
-  (:export :print-all-slots-mixin :shallow-copy :map-slots :reduce-slots))
-(cl:in-package :gefjon-utils/clos)
+(uiop:define-package gefjon-utils/clos
+  (:mix gefjon-utils/iterate iterate cl)
+  (:export print-all-slots-mixin shallow-copy map-slots reduce-slots))
+(in-package gefjon-utils/clos)
 
 ;; this has to be a `CL:DEFCLASS' form rather than a
 ;; `GEFJON-UTLS:DEFINE-CLASS' because that macro inserts this as a mixin
