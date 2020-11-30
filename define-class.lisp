@@ -1,14 +1,14 @@
 (uiop:define-package gefjon-utils/define-class
   (:mix cl)
   (:import-from alexandria
-                symbolicate)
+                symbolicate remove-from-plist)
   (:import-from gefjon-utils/clos
                 print-all-slots-mixin)
   (:import-from gefjon-utils/symbol-manipulations
                 make-keyword)
   (:import-from gefjon-utils/type-definitions
                 optional)
-  (:export define-class))
+  (:export define-class define-enum))
 (in-package gefjon-utils/define-class)
 
 (defmacro err-uninit (slot-name)
@@ -107,3 +107,38 @@ accessor. the slot will still be writable with (`SETF'
          (:documentation ,documentation))
        ,(slot-boundp-forms class-name
                            slot-descriptors))))
+
+(defmacro define-enum (type-name common-slots variants &rest define-class-options)
+  "define an enum or sum type named TYPE-NAME with COMMON-SLOTS.
+
+this compiles into a superclass TYPE-NAME and a subtype for each of
+the VARIANTS. it's likely incorrect to do (`MAKE-INSTANCE'
+'TYPE-NAME), since TYPE-NAME is intended to be an abstract
+superclass.
+
+VARIANTS should be a list of variant-descriptors, each of which is a
+list of the form (VARIANT-NAME UNIQUE-SLOTS).
+
+UNIQUE-SLOTS is a list of slot-descriptors, each of which is a list of
+the form (SLOT-NAME SLOT-TYPE `&KEY' INITFORM MAY-INIT-UNBOUND
+ACCESSOR). the `&KEY' args all have sensible defaults."
+  `(progn (define-class ,type-name ,common-slots ,@define-class-options)
+          (extend-enum ,type-name ,variants)))
+
+(defmacro extend-enum (enum-name variants)
+  "add additional VARIANTS to an already-defined enum ENUM-NAME.
+
+this just defines subclasses of ENUM-NAME."
+  (flet ((define-variant (variant)
+           (destructuring-bind (variant-name unique-slots
+                                &rest options &key superclasses &allow-other-keys)
+               variant
+             `(define-class ,variant-name
+                ,unique-slots
+                ;; put declared superclasses before the enum class, to
+                ;; allow mixins on variants which supersede methods
+                ;; from the enum class.
+                :superclasses (,@superclasses ,enum-name)
+                ,@(remove-from-plist options :superclasses)))))
+    `(progn
+       ,@(mapcar #'define-variant variants))))
