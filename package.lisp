@@ -12,4 +12,5 @@
    gefjon-utils/type-declaration
    gefjon-utils/type-definitions
    gefjon-utils/iterate
-   gefjon-utils/adjustable-vector))
+   gefjon-utils/adjustable-vector
+   gefjon-utils/special))
