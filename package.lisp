@@ -13,4 +13,6 @@
    gefjon-utils/type-definitions
    gefjon-utils/iterate
    gefjon-utils/adjustable-vector
-   gefjon-utils/special))
+   gefjon-utils/special
+   gefjon-utils/generic-subst
+   gefjon-utils/named-let))

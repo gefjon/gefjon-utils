@@ -1,5 +1,5 @@
 (uiop:define-package gefjon-utils/define-class
-  (:mix cl)
+  (:mix cl iterate)
   (:import-from alexandria
                 symbolicate remove-from-plist)
   (:import-from gefjon-utils/clos
@@ -8,7 +8,7 @@
                 make-keyword)
   (:import-from gefjon-utils/type-definitions
                 optional)
-  (:export define-class define-enum))
+  (:export define-class define-enum slots-list-to-make-instance-args))
 (in-package gefjon-utils/define-class)
 
 (defmacro err-uninit (slot-name)
@@ -142,3 +142,9 @@ this just defines subclasses of ENUM-NAME."
                 ,@(remove-from-plist options :superclasses)))))
     `(progn
        ,@(mapcar #'define-variant variants))))
+
+(defun slots-list-to-make-instance-args (slots)
+  "For a list of slot descriptors like ((A TYPE-A) (B TYPE-B)), return a list (:A A :B B) which can be inserted into a `make-instance' form"
+  (iter (for (slot-name) in slots)
+    (collect (make-keyword slot-name))
+    (collect slot-name)))
