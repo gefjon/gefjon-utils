@@ -1,6 +1,8 @@
 (uiop:define-package gefjon-utils/clos
   (:mix gefjon-utils/iterate iterate cl)
-  (:export print-all-slots-mixin shallow-copy map-slots reduce-slots))
+  (:export print-all-slots-mixin print-all-slots-condition
+           shallow-copy map-slots reduce-slots
+           with-slot-accessors))
 (in-package gefjon-utils/clos)
 
 ;; this has to be a `CL:DEFCLASS' form rather than a
@@ -74,3 +76,12 @@ the OTHER-OBJECTS. The order of the slots is undefined."
       (setf reduction (apply func reduction
                              (slot-val object) (mapcar #'slot-val other-objects))))
     (finally (return reduction))))
+
+(defmacro with-slot-accessors (slot-entries instance &body body)
+  "Like `cl:with-accessors', but permitting the shorthand allowed by `cl:with-slots' to bind an accessed value to the name of its accessor."
+  (flet ((expand-slot-entry (entry)
+           (etypecase entry
+             (symbol (list entry entry))
+             (list entry))))
+    `(with-accessors ,(mapcar #'expand-slot-entry slot-entries) ,instance
+       ,@body)))
