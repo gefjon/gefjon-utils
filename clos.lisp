@@ -5,14 +5,17 @@
            with-slot-accessors))
 (in-package gefjon-utils/clos)
 
-;; this has to be a `CL:DEFCLASS' form rather than a
-;; `GEFJON-UTLS:DEFINE-CLASS' because that macro inserts this as a mixin
-;; to all its class definitions; using the raw `DEFCLASS' avoids a
+;; this has to be a `cl:defclass' form rather than a
+;; `gefjon-utls:define-class' because that macro inserts this as a mixin
+;; to all its class definitions; using the raw `defclass' avoids a
 ;; circular dependency
 (defclass print-all-slots-mixin () ()
-  (:documentation "a mixin with a `PRINT-OBJECT' method that prints all its slots"))
+  (:documentation "a mixin with a `print-object' method that prints all its slots"))
 
-(defmethod print-object ((object print-all-slots-mixin) stream)
+(define-condition print-all-slots-condition () ()
+  (:documentation "a mixing with a `print-object' method that prints all its slots"))
+
+(defun print-all-slots (object stream)
   "print all the slots of OBJECT in the same format as for a `STRUCTURE-OBJECT'"
   (pprint-logical-block (stream nil)
     (print-unreadable-object (object stream :type nil :identity nil)
@@ -27,6 +30,12 @@
             (pprint-newline :linear stream))
           (write-char #\space stream)
           (format stream ":~a ~s" slot-name (slot-value object slot-name)))))))
+
+(defmethod print-object ((object print-all-slots-mixin) stream)
+  (print-all-slots object stream))
+
+(defmethod print-object ((object print-all-slots-condition) stream)
+  (print-all-slots object stream))
 
 
 (defgeneric shallow-copy (object &rest initargs &key &allow-other-keys)
