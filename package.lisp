@@ -17,4 +17,5 @@
    gefjon-utils/special
    gefjon-utils/generic-subst
    gefjon-utils/named-let
-   gefjon-utils/values))
+   gefjon-utils/values
+   gefjon-utils/function))
