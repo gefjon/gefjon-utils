@@ -15,4 +15,5 @@
    gefjon-utils/adjustable-vector
    gefjon-utils/special
    gefjon-utils/generic-subst
-   gefjon-utils/named-let))
+   gefjon-utils/named-let
+   gefjon-utils/values))
