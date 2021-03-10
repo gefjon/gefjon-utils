@@ -9,6 +9,7 @@
    gefjon-utils/clos
    gefjon-utils/repl
    gefjon-utils/places
+   gefjon-utils/type-manipulations
    gefjon-utils/type-declaration
    gefjon-utils/type-definitions
    gefjon-utils/iterate
