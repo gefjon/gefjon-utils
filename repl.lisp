@@ -1,10 +1,15 @@
 (uiop:define-package gefjon-utils/repl
   (:mix cl)
   (:import-from quicklisp quickload)
-  (:export load-and-enter))
+  (:export load-and-enter println))
 (in-package gefjon-utils/repl)
 
 (defmacro load-and-enter (system-package-designator)
   `(progn
      (quickload ,system-package-designator)
      (in-package ,system-package-designator)))
+
+(defun println (format-string &rest stuff)
+  (fresh-line)
+  (apply #'format t format-string stuff)
+  (terpri))
