@@ -1,8 +1,8 @@
-(uiop:define-package gefjon-utils/iterate
-  (:mix iterate cl)
-  (:import-from closer-mop
-                slot-definition-name class-slots)
-  (:export skip-nil))
+(uiop:define-package #:gefjon-utils/iterate
+  (:mix #:iterate #:cl)
+  (:import-from #:closer-mop
+                #:slot-definition-name #:class-slots)
+  (:export #:skip-nil))
 (in-package gefjon-utils/iterate)
 
 (defmacro skip-nil (var)

@@ -1,7 +1,7 @@
-(uiop:define-package gefjon-utils/function
-  (:mix gefjon-utils/type-declaration gefjon-utils/type-definitions cl)
-  (:export ~> pipe))
-(in-package gefjon-utils/function)
+(uiop:define-package #:gefjon-utils/function
+  (:mix #:gefjon-utils/type-declaration #:gefjon-utils/type-definitions #:cl)
+  (:export #:~> #:pipe))
+(in-package #:gefjon-utils/function)
 
 (declaim (inline ~>))
 

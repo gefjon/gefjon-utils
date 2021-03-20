@@ -1,7 +1,7 @@
-(uiop:define-package gefjon-utils/named-let
-  (:mix cl)
-  (:export nlet))
-(in-package gefjon-utils/named-let)
+(uiop:define-package #:gefjon-utils/named-let
+  (:mix #:cl)
+  (:export #:nlet))
+(in-package #:gefjon-utils/named-let)
 
 (defmacro nlet (recurse bindings &body body)
   (flet ((binding-name (binding)

@@ -1,15 +1,15 @@
-(uiop:define-package gefjon-utils/define-class
-  (:mix cl iterate)
-  (:import-from alexandria
-                symbolicate remove-from-plist)
-  (:import-from gefjon-utils/clos
-                print-all-slots-mixin print-all-slots-condition)
-  (:import-from gefjon-utils/symbol-manipulations
-                make-keyword)
-  (:import-from gefjon-utils/type-definitions
-                optional)
-  (:export define-class define-enum slots-list-to-make-instance-args))
-(in-package gefjon-utils/define-class)
+(uiop:define-package #:gefjon-utils/define-class
+  (:mix #:cl #:iterate)
+  (:import-from #:alexandria
+                #:symbolicate #:remove-from-plist)
+  (:import-from #:gefjon-utils/clos
+                #:print-all-slots-mixin #:print-all-slots-condition)
+  (:import-from #:gefjon-utils/symbol-manipulations
+                #:make-keyword)
+  (:import-from #:gefjon-utils/type-definitions
+                #:optional)
+  (:export #:define-class #:define-enum #:slots-list-to-make-instance-args))
+(in-package #:gefjon-utils/define-class)
 
 (defmacro err-uninit (slot-name)
   `(error "required field uninit: ~s" ',slot-name))

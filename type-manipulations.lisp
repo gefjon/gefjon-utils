@@ -1,18 +1,18 @@
-(uiop:define-package gefjon-utils/type-manipulations
+(uiop:define-package #:gefjon-utils/type-manipulations
   (:mix
-   gefjon-utils/type-declaration
-   gefjon-utils/type-definitions
-   gefjon-utils/define-class
-   cl)
+   #:gefjon-utils/type-declaration
+   #:gefjon-utils/type-definitions
+   #:gefjon-utils/define-class
+   #:cl)
   (:export
-   type-specifier
+   #:type-specifier
 
-   subtypep-indeterminate smaller larger
+   #:subtypep-indeterminate #:smaller #:larger
 
-   subtypep*
+   #:subtypep*
    
-   type= types-disjoint-p types-overlap-p))
-(in-package gefjon-utils/type-manipulations)
+   #:type= #:types-disjoint-p #:types-overlap-p))
+(in-package #:gefjon-utils/type-manipulations)
 
 (deftype type-specifier ()
   '(or list symbol))

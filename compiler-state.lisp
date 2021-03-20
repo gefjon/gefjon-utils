@@ -1,7 +1,7 @@
-(uiop:define-package gefjon-utils/compiler-state
-  (:mix cl)
-  (:export compiler-state compiler-defun))
-(in-package gefjon-utils/compiler-state)
+(uiop:define-package #:gefjon-utils/compiler-state
+  (:mix #:cl)
+  (:export #:compiler-state #:compiler-defun))
+(in-package #:gefjon-utils/compiler-state)
 
 (defmacro compiler-state (&body body)
   "evaluate body in a way that makes its side effects (e.g. definitions and bindings) available at compile-time."

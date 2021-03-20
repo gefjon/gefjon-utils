@@ -1,8 +1,8 @@
-(uiop:define-package gefjon-utils/generic-subst
-  (:mix gefjon-utils/define-class gefjon-utils/clos cl)
-  (:shadow subst)
-  (:export subst subst-all-slots subst-atom))
-(in-package gefjon-utils/generic-subst)
+(uiop:define-package #:gefjon-utils/generic-subst
+  (:mix #:gefjon-utils/define-class #:gefjon-utils/clos #:cl)
+  (:shadow #:subst)
+  (:export #:subst #:subst-all-slots #:subst-atom))
+(in-package #:gefjon-utils/generic-subst)
 
 (define-class subst-all-slots ()
   :documentation "A mixin which causes the generic `subst' to treat this `standard-class' as a trunk node, recursing on all its bound slots.")

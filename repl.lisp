@@ -1,8 +1,8 @@
-(uiop:define-package gefjon-utils/repl
-  (:mix cl)
-  (:import-from quicklisp quickload)
-  (:export load-and-enter println print-hex))
-(in-package gefjon-utils/repl)
+(uiop:define-package #:gefjon-utils/repl
+  (:mix #:cl)
+  (:import-from #:quicklisp #:quickload)
+  (:export #:load-and-enter #:println #:print-hex))
+(in-package #:gefjon-utils/repl)
 
 (defmacro load-and-enter (system-package-designator)
   `(progn
