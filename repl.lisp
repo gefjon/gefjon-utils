@@ -1,7 +1,7 @@
 (uiop:define-package gefjon-utils/repl
   (:mix cl)
   (:import-from quicklisp quickload)
-  (:export load-and-enter println))
+  (:export load-and-enter println print-hex))
 (in-package gefjon-utils/repl)
 
 (defmacro load-and-enter (system-package-designator)
@@ -13,3 +13,6 @@
   (fresh-line)
   (apply #'format t format-string stuff)
   (terpri))
+
+(defun print-hex (number)
+  (println "~x" number))
