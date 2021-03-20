@@ -1,6 +1,6 @@
 (uiop:define-package gefjon-utils/function
   (:mix gefjon-utils/type-declaration gefjon-utils/type-definitions cl)
-  (:export ~>))
+  (:export ~> pipe))
 (in-package gefjon-utils/function)
 
 (declaim (inline ~>))
@@ -24,3 +24,7 @@ then passes the new result to the second, and so on."
                 `(multiple-value-call ,new-function ,accumulator))
               other-functions
               :initial-value `(apply ,first-function args))))
+
+(defmacro pipe (arg &body functions)
+  `(funcall (~> ,@functions)
+            ,arg))
