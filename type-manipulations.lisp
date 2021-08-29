@@ -1,9 +1,12 @@
-(uiop:define-package #:gefjon-utils/type-manipulations
+(uiop:define-package :gefjon-utils/type-manipulations
   (:mix
-   #:gefjon-utils/type-declaration
-   #:gefjon-utils/type-definitions
-   #:gefjon-utils/define-class
-   #:cl)
+   :gefjon-utils/type-declaration
+   :gefjon-utils/type-definitions
+   :gefjon-utils/define-class
+   :cl
+   :iterate)
+  (:import-from :alexandria
+                #:make-gensym-list)
   (:export
    #:type-specifier
 
@@ -11,8 +14,10 @@
 
    #:subtypep*
    
-   #:type= #:types-disjoint-p #:types-overlap-p))
-(in-package #:gefjon-utils/type-manipulations)
+   #:type= #:types-disjoint-p #:types-overlap-p
+
+   #:many-typecase #:many-etypecase #:many-ctypecase))
+(in-package :gefjon-utils/type-manipulations)
 
 (deftype type-specifier ()
   '(or list symbol))
@@ -42,3 +47,26 @@
 (typedec #'types-overlap-p (func (type-specifier type-specifier) boolean))
 (defun types-overlap-p (lht rht)
   (not (types-disjoint-p lht rht)))
+
+(defun many-typecase-form (values body-clauses otherwise-form)
+  (let* ((names (alexandria:make-gensym-list (length values))))
+    (labels ((bind-temp-name (name initform)
+               (list name initform))
+             (typep-form (name type)
+               `(typep ,name ',type))
+             (cond-clause (clause)
+               (destructuring-bind (types &body body) clause
+                 `((and ,@(mapcar #'typep-form names types))
+                   ,@body))))
+      `(let ,(mapcar #'bind-temp-name names values)
+         (cond ,@(mapcar #'cond-clause body-clauses)
+               (t ,otherwise-form))))))
+
+(defmacro many-typecase ((&rest values) &body clauses)
+  (many-typecase-form values clauses nil))
+
+(defmacro many-etypecase ((&rest values) &body clauses)
+  (many-typecase-form values clauses '(error "fell through many-etypecase expression")))
+
+(defmacro many-ctypecase ((&rest values) &body clauses)
+  (many-typecase-form values clauses '(cerror "fell through many-ctypecase expression")))
