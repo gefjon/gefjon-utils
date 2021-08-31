@@ -23,7 +23,8 @@
   (initarg (err-uninit initarg) :type (optional keyword))
   (accessor (err-uninit accessor) :type symbol)
   (read-only nil :type boolean)
-  (documentation nil :type (or null string)))
+  (documentation nil :type (or null string))
+  (allocation :instance :type (member :class :instance)))
 
 (defun parse-slot-descriptor (list)
   (destructuring-bind (public-name type &key (may-init-unbound t)
@@ -32,7 +33,8 @@
                                           (initarg (make-keyword public-name))
                                           (accessor public-name)
                                           read-only
-                                          documentation)
+                                          documentation
+                                          (allocation :instance))
       list
     (when (and read-only (not accessor))
       (error ":READ-ONLY T is incompatible with :ACCESSOR NIL"))
@@ -44,11 +46,13 @@
                           :initarg initarg
                           :accessor accessor
                           :read-only read-only
-                          :documentation documentation)))
+                          :documentation documentation
+                          :allocation allocation)))
 
 (defun output-slot-descriptor (slot-descriptor)
   "build a slot-specifier suitable for `CL:DEFCLASS'"
-  (with-slots (private-name type has-initform-p initform initarg accessor read-only documentation) slot-descriptor
+  (with-slots (private-name type has-initform-p initform initarg accessor read-only documentation allocation)
+      slot-descriptor
     `(,private-name
       :type ,type
       ,@(when has-initform-p
@@ -58,7 +62,8 @@
       ,@(when accessor
           `(,(if read-only :reader :accessor) ,accessor))
       ,@(when documentation
-          `(:documentation ,documentation)))))
+          `(:documentation ,documentation))
+      :allocation ,allocation)))
 
 (defun slot-boundp-forms (class-name slot-descriptors)
   (labels ((boundp-name (slot-name)
