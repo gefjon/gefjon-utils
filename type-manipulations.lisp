@@ -20,7 +20,7 @@
 (in-package :gefjon-utils/type-manipulations)
 
 (deftype type-specifier ()
-  '(or list symbol))
+  '(or list symbol class))
 
 (define-class subtypep-indeterminate
     ((smaller type-specifier)
