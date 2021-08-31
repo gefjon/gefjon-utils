@@ -15,4 +15,4 @@
   (terpri))
 
 (defun print-hex (number)
-  (println "~x" number))
+  (println "#x~x" number))
