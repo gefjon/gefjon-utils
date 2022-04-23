@@ -1,9 +1,9 @@
-(uiop:define-package #:gefjon-utils/clos
-  (:mix #:gefjon-utils/iterate #:iterate #:cl)
+(uiop:define-package :gefjon-utils/clos
+  (:use :gefjon-utils/iterate :iterate :cl)
   (:export #:print-all-slots-mixin #:print-all-slots-condition
            #:shallow-copy #:map-slots #:reduce-slots
            #:with-slot-accessors))
-(in-package #:gefjon-utils/clos)
+(in-package :gefjon-utils/clos)
 
 ;; this has to be a `cl:defclass' form rather than a
 ;; `gefjon-utls:define-class' because that macro inserts this as a mixin

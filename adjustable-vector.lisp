@@ -1,8 +1,8 @@
-(uiop:define-package #:gefjon-utils/adjustable-vector
-  (:mix #:cl)
-  (:import-from #:alexandria #:with-gensyms)
+(uiop:define-package :gefjon-utils/adjustable-vector
+  (:use :cl)
+  (:import-from :alexandria #:with-gensyms)
   (:export #:adjustable-vector #:make-adjustable-vector #:specialized-vector))
-(in-package #:gefjon-utils/adjustable-vector)
+(in-package :gefjon-utils/adjustable-vector)
 
 (defun vector-adjustable-p (vector)
   (and (vectorp vector)

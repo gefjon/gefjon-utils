@@ -1,9 +1,9 @@
-(uiop:define-package #:gefjon-utils/type-definitions
-  (:mix #:cl)
+(uiop:define-package :gefjon-utils/type-definitions
+  (:use :cl)
   (:export
    #:function-return-type
    #:hash-map #:optional #:values! #:func #:void #:tuple #:list-of #:form #:natnum))
-(in-package #:gefjon-utils/type-definitions)
+(in-package :gefjon-utils/type-definitions)
 
 (defun form-head-p (form head)
   (and (consp form)

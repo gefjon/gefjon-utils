@@ -1,9 +1,9 @@
-(uiop:define-package #:gefjon-utils/values
-  (:mix #:cl #:iterate)
-  (:import-from #:alexandria
+(uiop:define-package :gefjon-utils/values
+  (:use #:cl #:iterate)
+  (:import-from :alexandria
                 #:with-gensyms #:make-gensym #:make-gensym-list)
   (:export #:map-values))
-(in-package #:gefjon-utils/values)
+(in-package :gefjon-utils/values)
 
 (defmacro map-values (function values-form &rest other-values-forms)
   "Transform multiple values through FUNCTION.

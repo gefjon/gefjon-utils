@@ -1,9 +1,9 @@
-(uiop:define-package #:gefjon-utils/named-let
-  (:mix #:cl)
-  (:export #:nlet))
+(uiop:define-package :gefjon-utils/named-let
+  (:use :cl)
+  (:export :named-let))
 (in-package #:gefjon-utils/named-let)
 
-(defmacro nlet (recurse bindings &body body)
+(defmacro named-let (recurse bindings &body body)
   (flet ((binding-name (binding)
            (etypecase binding
              (cons (first binding))

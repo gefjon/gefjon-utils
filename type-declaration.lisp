@@ -1,9 +1,9 @@
-(uiop:define-package #:gefjon-utils/type-declaration
-  (:mix #:cl)
-  (:import-from #:gefjon-utils/type-definitions
+(uiop:define-package :gefjon-utils/type-declaration
+  (:use :cl)
+  (:import-from :gefjon-utils/type-definitions
                 #:func #:void)
   (:export #:typedec #:assert-type #:the! #:attempt-coerce))
-(in-package #:gefjon-utils/type-declaration)
+(in-package :gefjon-utils/type-declaration)
 
 (defun function-form-p (form)
   (and (consp form)

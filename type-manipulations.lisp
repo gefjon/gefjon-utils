@@ -1,5 +1,5 @@
 (uiop:define-package :gefjon-utils/type-manipulations
-  (:mix
+  (:use
    :gefjon-utils/type-declaration
    :gefjon-utils/type-definitions
    :gefjon-utils/define-class

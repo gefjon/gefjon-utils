@@ -1,9 +1,9 @@
-(uiop:define-package #:gefjon-utils/iterate
-  (:mix #:iterate #:cl)
-  (:import-from #:closer-mop
+(uiop:define-package :gefjon-utils/iterate
+  (:use :iterate :cl)
+  (:import-from :closer-mop
                 #:slot-definition-name #:class-slots)
   (:export #:skip-nil))
-(in-package gefjon-utils/iterate)
+(in-package :gefjon-utils/iterate)
 
 (defmacro skip-nil (var)
   "an ITERATE clause. skip iterations where VAR is NIL."
